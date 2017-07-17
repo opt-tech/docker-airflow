@@ -26,9 +26,6 @@ ENV LC_ALL en_US.UTF-8
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends python-dev libkrb5-dev libsasl2-dev libssl-dev libffi-dev build-essential libblas-dev liblapack-dev libpq-dev git python-requests apt-utils curl netcat locales
 
-# Airflow tools for bash commands
-RUN apt-get install -y --no-install-recommends rsync openssh-client sshpass
-
 RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 RUN locale-gen
 RUN update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
@@ -37,6 +34,17 @@ RUN useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
 RUN pip install Cython pytz pyOpenSSL ndg-httpsclient pyasn1
 RUN pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc]==$AIRFLOW_VERSION
 RUN pip install celery[redis]
+
+COPY script/entrypoint.sh /entrypoint.sh
+COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+
+RUN chown -R airflow: ${AIRFLOW_HOME}
+
+# Remove airflow example files
+RUN rm -fr /usr/local/lib/python3.5/site-packages/airflow/example_dags/
+
+# Airflow tools for bash commands
+RUN apt-get install -y --no-install-recommends rsync openssh-client sshpass
 
 RUN apt-get clean
 RUN rm -rf \
@@ -47,13 +55,6 @@ RUN rm -rf \
         /usr/share/doc \
         /usr/share/doc-base
 
-COPY script/entrypoint.sh /entrypoint.sh
-COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-
-RUN chown -R airflow: ${AIRFLOW_HOME}
-
-# Remove airflow example files
-RUN rm -fr /usr/local/lib/python3.5/site-packages/airflow/example_dags/
 
 EXPOSE 8080 5555 8793
 
