@@ -16,11 +16,6 @@ TRY_LOOP="20"
 
 : ${FERNET_KEY:=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)")}
 
-# Load DAGs exemples (default: Yes)
-if [ "$LOAD_EX" = "n" ]; then
-    sed -i "s/load_examples = True/load_examples = False/" "$AIRFLOW_HOME"/airflow.cfg
-fi
-
 # Install custome python package if requirements.txt is present
 if [ -e "/requirements.txt" ]; then
     $(which pip) install --user -r /requirements.txt

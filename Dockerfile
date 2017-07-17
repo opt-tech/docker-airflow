@@ -1,8 +1,8 @@
 # VERSION 1.8.1
-# AUTHOR: Matthieu "Puckel_" Roisil
-# DESCRIPTION: Basic Airflow container
-# BUILD: docker build --rm -t puckel/docker-airflow .
-# SOURCE: https://github.com/puckel/docker-airflow
+# AUTHOR: G. Ghez
+# DESCRIPTION: Python 3.5 Prod Airflow container
+# BUILD: docker build --rm -t gghez/docker-airflow .
+# SOURCE: https://github.com/gghez/docker-airflow
 
 FROM python:3.5-slim
 MAINTAINER gghez
@@ -25,6 +25,9 @@ ENV LC_ALL en_US.UTF-8
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends python-dev libkrb5-dev libsasl2-dev libssl-dev libffi-dev build-essential libblas-dev liblapack-dev libpq-dev git python-requests apt-utils curl netcat locales
+
+# Airflow tools for bash commands
+RUN apt-get install -y --no-install-recommends rsync
 
 RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 RUN locale-gen

@@ -1,36 +1,36 @@
 version: '2'
 services:
     redis:
-        image: 'redis:3.2.7'
+        image: redis:3.2.7
+        restart: always
 
     postgres:
         image: postgres:9.6
+        restart: always
         environment:
             - POSTGRES_USER=airflow
             - POSTGRES_PASSWORD=airflow
             - POSTGRES_DB=airflow
 
     webserver:
-        image: puckel/docker-airflow:1.8.1
+        image: gghez/docker-airflow
         restart: always
         depends_on:
             - postgres
             - redis
         environment:
-            - LOAD_EX=y
+            - LOAD_EX=n
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
             - EXECUTOR=Celery
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
-        # volumes:
-            # - ~/docker-airflow/dags:/usr/local/airflow/dags
+        volumes:
+            - ~/airflow/dags:/usr/local/airflow/dags
+            - ~/airflow/requirements.txt:/requirements.txt
         ports:
             - "8080:8080"
         command: webserver
 
     flower:
-        image: puckel/docker-airflow:1.8.1
+        image: gghez/docker-airflow
         restart: always
         depends_on:
             - redis
@@ -41,32 +41,31 @@ services:
         command: flower
 
     scheduler:
-        image: puckel/docker-airflow:1.8.1
+        image: gghez/docker-airflow
         restart: always
         depends_on:
             - webserver
-        # volumes:
-            # - ~/docker-airflow/dags:/usr/local/airflow/dags
+        volumes:
+            - ~/airflow/dags:/usr/local/airflow/dags
+            - ~/airflow/requirements.txt:/requirements.txt
         environment:
-            - LOAD_EX=y
+            - LOAD_EX=n
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
             - EXECUTOR=Celery
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
         command: scheduler
 
     worker:
-        image: puckel/docker-airflow:1.8.1
+        image: gghez/docker-airflow
         restart: always
         depends_on:
             - scheduler
-        # volumes:
-            # - ~/docker-airflow/dags:/usr/local/airflow/dags
+        volumes:
+            - ~/airflow/dags:/usr/local/airflow/dags
+            - ~/airflow/requirements.txt:/requirements.txt
+            - /data:/data
         environment:
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
             - EXECUTOR=Celery
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
+        ports:
+            - "8793:8793"
         command: worker
