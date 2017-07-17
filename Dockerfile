@@ -27,7 +27,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends python-dev libkrb5-dev libsasl2-dev libssl-dev libffi-dev build-essential libblas-dev liblapack-dev libpq-dev git python-requests apt-utils curl netcat locales
 
 # Airflow tools for bash commands
-RUN apt-get install -y --no-install-recommends rsync
+RUN apt-get install -y --no-install-recommends rsync openssh-client sshpass
 
 RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 RUN locale-gen
