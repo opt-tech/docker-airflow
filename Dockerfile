@@ -49,6 +49,9 @@ COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 
+# Remove airflow example files
+RUN rm -fr /usr/local/lib/python3.5/site-packages/airflow/example_dags/
+
 EXPOSE 8080 5555 8793
 
 USER airflow
