@@ -24,7 +24,8 @@ ENV LC_MESSAGES en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends python-dev libkrb5-dev libsasl2-dev libssl-dev libffi-dev build-essential libblas-dev liblapack-dev libpq-dev git python-requests apt-utils curl netcat locales
+RUN apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install -y --no-install-recommends python-dev libkrb5-dev libsasl2-dev libssl-dev libffi-dev build-essential libblas-dev liblapack-dev libpq-dev git python-requests curl netcat locales
 
 RUN sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 RUN locale-gen
