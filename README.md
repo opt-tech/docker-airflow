@@ -58,6 +58,39 @@ Check [Airflow Documentation](https://pythonhosted.org/airflow/)
 - Mount this file as a volume `-v $(pwd)/requirements.txt:/requirements.txt`
 - The entrypoint.sh script execute the pip install command (with --user option)
 
+## Define a minimal login system (default is openbar)
+
+### docker-compose file
+
+On webserver, scheduler and worker services in docker compose file, define those environment variables:
+
+```
+- AIRFLOW__WEBSERVER__AUTHENTICATE=True
+- AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.contrib.auth.backends.password_auth
+```
+
+### setup user credentials
+
+Connect to running webserver `docker exec -it dockerairflow_webserver_1 /bin/bash` and open python interpreter:
+
+```
+$ python
+Python 3.5.x (default, Feb 10 2015, 03:28:08)
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import airflow
+>>> from airflow import models, settings
+>>> from airflow.contrib.auth.backends.password_auth import PasswordUser
+>>> user = PasswordUser(models.User())
+>>> user.username = 'new_user_name'
+>>> user.email = 'new_user_email@example.com'
+>>> user.password = 'set_the_password'
+>>> session = settings.Session()
+>>> session.add(user)
+>>> session.commit()
+>>> session.close()
+>>> exit()
+```
+
 ## UI Links
 
 - Airflow: [localhost:8080](http://localhost:8080/)
