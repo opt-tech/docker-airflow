@@ -10,7 +10,7 @@ This repository contains **Dockerfile** of [apache-airflow](https://github.com/a
 
 ## Informations
 
-* Based on Debian Jessie official Image [debian:jessie](https://registry.hub.docker.com/_/debian/) and uses the official [Postgres](https://hub.docker.com/_/postgres/) as backend and [Redis](https://hub.docker.com/_/redis/) as queue
+* Based on [Python 3.5](https://hub.docker.com/_/python) image and uses the official [Postgres](https://hub.docker.com/_/postgres/) as backend and [Redis](https://hub.docker.com/_/redis/) as queue
 * Install [Docker](https://www.docker.com/)
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
 * Following the Airflow release from [Python Package Index](https://pypi.python.org/pypi/apache-airflow)
@@ -19,19 +19,19 @@ This repository contains **Dockerfile** of [apache-airflow](https://github.com/a
 
 Pull the image from the Docker repository.
 
-        docker pull puckel/docker-airflow
+        docker pull gghez/docker-airflow
 
 ## Build
 
 For example, if you need to install [Extra Packages](https://pythonhosted.org/airflow/installation.html#extra-package), edit the Dockerfile and then build it.
 
-        docker build --rm -t puckel/docker-airflow .
+        docker build --rm -t gghez/docker-airflow .
 
 ## Usage
 
 By default, docker-airflow runs Airflow with **SequentialExecutor** :
 
-        docker run -d -p 8080:8080 puckel/docker-airflow
+        docker run -d -p 8080:8080 gghez/docker-airflow
 
 If you want to run Celery, use the other docker-compose.yml files provided in this repository.
 
