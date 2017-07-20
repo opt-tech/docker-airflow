@@ -56,6 +56,8 @@ RUN rm -rf \
         /usr/share/doc \
         /usr/share/doc-base
 
+# Additional python package for (eg: airflow password authentication)
+RUN pip install flask_bcrypt
 
 EXPOSE 8080 5555 8793
 
