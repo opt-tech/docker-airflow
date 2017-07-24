@@ -69,21 +69,18 @@ On webserver, scheduler and worker services in docker compose file, define those
 Connect to running webserver `docker exec -it dockerairflow_webserver_1 /bin/bash` and open python interpreter:
 
 ```
-$ python
-Python 3.5.x (default, Feb 10 2015, 03:28:08)
-Type "help", "copyright", "credits" or "license" for more information.
->>> import airflow
->>> from airflow import models, settings
->>> from airflow.contrib.auth.backends.password_auth import PasswordUser
->>> user = PasswordUser(models.User())
->>> user.username = 'new_user_name'
->>> user.email = 'new_user_email@example.com'
->>> user.password = 'set_the_password'
->>> session = settings.Session()
->>> session.add(user)
->>> session.commit()
->>> session.close()
->>> exit()
+import airflow
+from airflow import models, settings
+from airflow.contrib.auth.backends.password_auth import PasswordUser
+
+user = PasswordUser(models.User())
+user.username = 'new_user_name'
+user.email = 'new_user_email@example.com'
+user.password = 'set_the_password'
+session = settings.Session()
+session.add(user)
+session.commit()
+session.close()
 ```
 
 ## UI Links
