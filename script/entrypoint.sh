@@ -10,13 +10,10 @@ TRY_LOOP="10"
 
 : ${REDIS_HOST:="redis"}
 : ${REDIS_PORT:="6379"}
-: ${REDIS_PASSWORD:=""}
 
 : ${POSTGRES_HOST:="postgres"}
 : ${POSTGRES_PORT:="5432"}
 : ${POSTGRES_USER:="airflow"}
-: ${POSTGRES_PASSWORD:="airflow"}
-: ${POSTGRES_DB:="airflow"}
 
 if [ -z "$AIRFLOW__CORE__FERNET_KEY" ]; then
     if ! [ -e /instance/fernet.key ]; then
