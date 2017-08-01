@@ -19,12 +19,13 @@ services:
             - postgres
             - redis
         environment:
-            - LOAD_EX=n
-            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
-            - EXECUTOR=Celery
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
+            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
         volumes:
             - ~/airflow/dags:/usr/local/airflow/dags
             - ~/airflow/requirements.txt:/requirements.txt
+            - ~/airflow/instance:/instance
         ports:
             - "8080:8080"
         command: webserver
@@ -35,7 +36,9 @@ services:
         depends_on:
             - redis
         environment:
-            - EXECUTOR=Celery
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
+            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
         ports:
             - "5555:5555"
         command: flower
@@ -49,9 +52,9 @@ services:
             - ~/airflow/dags:/usr/local/airflow/dags
             - ~/airflow/requirements.txt:/requirements.txt
         environment:
-            - LOAD_EX=n
-            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
-            - EXECUTOR=Celery
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
+            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
         command: scheduler
 
     worker:
@@ -64,8 +67,9 @@ services:
             - ~/airflow/requirements.txt:/requirements.txt
             - /data:/data
         environment:
-            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
-            - EXECUTOR=Celery
+            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
+            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
         ports:
             - "8793:8793"
         command: worker
