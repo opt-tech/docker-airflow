@@ -38,10 +38,18 @@ fi
 
 # Wait for Postresql
 if [ "$1" = "webserver" ] || [ "$1" = "worker" ] || [ "$1" = "scheduler" ] ; then
-    until psql -h "$POSTGRES_HOST:$POSTGRES_PORT" -U "$POSTGRES_USER" -c '\l'; do
-      >&2 echo "Postgres is unavailable - sleeping"
-      sleep 5
-    done
+  i=0
+  while ! nc -z $POSTGRES_HOST $POSTGRES_PORT >/dev/null 2>&1 < /dev/null; do
+    i=$((i+1))
+    if [ "$1" = "webserver" ]; then
+      echo "$(date) - waiting for ${POSTGRES_HOST}:${POSTGRES_PORT}... $i/$TRY_LOOP"
+      if [ $i -ge $TRY_LOOP ]; then
+        echo "$(date) - ${POSTGRES_HOST}:${POSTGRES_PORT} still not reachable, giving up"
+        exit 1
+      fi
+    fi
+    sleep 10
+  done
 fi
 
 # Wait for Redis
