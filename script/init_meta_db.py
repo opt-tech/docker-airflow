@@ -48,6 +48,9 @@ def update_connections(connections):
                 existing.host = conn['host']
                 existing.port = conn['port']
                 existing.conn_type = conn['conn_type']
+                existing.login = conn.get('login')
+                existing.password = conn.get('password')
+                existing.schema = conn.get('schema')
                 session.merge(existing)
                 print('UPDATED: connection %s' % conn_id)
             else:
