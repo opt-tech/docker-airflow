@@ -27,7 +27,7 @@ def create_admin_user(admin_user):
             session.commit()
             print('\tCREATED: Admin user %s' % user.username)
         else:
-            print('\tSKIPPED: Meta DB already initialized.')
+            print('\tSKIPPED: Admin user %s already exists.' % user.username)
     finally:
         session.close()
 
