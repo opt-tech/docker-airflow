@@ -54,7 +54,18 @@ if [ "$1" = "webserver" ]; then
     echo "Initialize database..."
     airflow initdb
 
-    python /init_meta_db.py --admin /instance/admin_user.json --connections /instance/connections.json --variables /instance/variables.json
+    INIT_CMD="/init_meta_db.py"
+    if [ -e /instance/admin_user.json ]; then
+        INIT_CMD="$INIT_CMD --admin /instance/admin_user.json"
+    fi
+    if [ -e /instance/connections.json ]; then
+        INIT_CMD="$INIT_CMD --connections /instance/connections.json"
+    fi
+    if [ -e /instance/variables.json ]; then
+        INIT_CMD="$INIT_CMD --variables /instance/variables.json"
+    fi
+    
+    python $INIT_CMD
 
     exec airflow webserver
 else
