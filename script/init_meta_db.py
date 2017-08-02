@@ -25,9 +25,9 @@ def create_admin_user(admin_user):
         if not existing:
             session.add(user)
             session.commit()
-            print('CREATED: Admin user %s' % user.username)
+            print('\tCREATED: Admin user %s' % user.username)
         else:
-            print('SKIPPED: Meta DB already initialized.')
+            print('\tSKIPPED: Meta DB already initialized.')
     finally:
         session.close()
 
@@ -52,11 +52,11 @@ def update_connections(connections):
                 existing.password = conn.get('password')
                 existing.schema = conn.get('schema')
                 session.merge(existing)
-                print('UPDATED: connection %s' % conn_id)
+                print('\tUPDATED: connection %s' % conn_id)
             else:
                 c = models.Connection(conn_id=conn_id, **conn)
                 session.add(c)
-                print('ADDED: connection %s' % conn_id)
+                print('\tADDED: connection %s' % conn_id)
 
         session.commit()
         print('Changes commited.')
@@ -79,11 +79,11 @@ def update_variables(variables):
             if existing:
                 existing.val = v
                 session.merge(existing)
-                print('UPDATED: variable %s' % k)
+                print('\tUPDATED: variable %s' % k)
             else:
                 var = models.Variable(key=k, val=v)
                 session.add(var)
-                print('ADDED: variable %s' % k)
+                print('\tADDED: variable %s' % k)
 
         session.commit()
         print('Changes commited.')
