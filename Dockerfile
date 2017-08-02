@@ -52,6 +52,7 @@ RUN rm -rf \
         /usr/share/doc-base
 
 COPY script/entrypoint.sh /entrypoint.sh
+COPY script/init_meta_db.py /init_meta_db.py
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 
 RUN chmod +x /entrypoint.sh
