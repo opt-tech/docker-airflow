@@ -1,9 +1,5 @@
 version: '2'
 services:
-    redis:
-        image: redis:3.2.7
-        restart: always
-
     postgres:
         image: postgres:9.6
         restart: always
@@ -20,8 +16,7 @@ services:
             - redis
         environment:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
-            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
         volumes:
             - ~/airflow/dags:/usr/local/airflow/dags
             - ~/airflow/requirements.txt:/requirements.txt
@@ -29,19 +24,6 @@ services:
         ports:
             - "8080:8080"
         command: webserver
-
-    flower:
-        image: gghez/docker-airflow
-        restart: always
-        depends_on:
-            - redis
-        environment:
-            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
-            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
-        ports:
-            - "5555:5555"
-        command: flower
 
     scheduler:
         image: gghez/docker-airflow
@@ -53,8 +35,7 @@ services:
             - ~/airflow/requirements.txt:/requirements.txt
         environment:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
-            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
         command: scheduler
 
     worker:
@@ -68,8 +49,7 @@ services:
             - /data:/data
         environment:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CELERY__BROKER_URL=redis://@redis:6379/1
-            - AIRFLOW__CELERY__CELERY_RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
         ports:
             - "8793:8793"
         command: worker
