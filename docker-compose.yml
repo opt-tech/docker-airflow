@@ -1,12 +1,12 @@
 version: '2'
 services:
+    redis:
+        image: redis:3.2.7
+
     postgres:
         image: postgres:9.6
-        restart: always
-        environment:
-            - POSTGRES_USER=airflow
-            - POSTGRES_PASSWORD=airflow
-            - POSTGRES_DB=airflow
+        env_file:
+            - ./instance/postgres.env
 
     webserver:
         image: gghez/docker-airflow
@@ -14,13 +14,13 @@ services:
         depends_on:
             - postgres
             - redis
-        environment:
-            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+        env_file:
+            - ./instance/airflow.env
+            - ./instance/postgres.env
         volumes:
-            - ~/airflow/dags:/usr/local/airflow/dags
-            - ~/airflow/requirements.txt:/requirements.txt
-            - ~/airflow/instance:/instance
+            - ./dags:/usr/local/airflow/dags
+            - ./requirements.txt:/requirements.txt
+            - ./instance:/instance
         ports:
             - "8080:8080"
         command: webserver
@@ -30,12 +30,12 @@ services:
         restart: always
         depends_on:
             - webserver
+        env_file:
+            - ./instance/airflow.env
+            - ./instance/postgres.env
         volumes:
-            - ~/airflow/dags:/usr/local/airflow/dags
-            - ~/airflow/requirements.txt:/requirements.txt
-        environment:
-            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+            - ./dags:/usr/local/airflow/dags
+            - ./requirements.txt:/requirements.txt
         command: scheduler
 
     worker:
@@ -43,13 +43,11 @@ services:
         restart: always
         depends_on:
             - scheduler
+        env_file:
+            - ./instance/airflow.env
+            - ./instance/postgres.env
         volumes:
-            - ~/airflow/dags:/usr/local/airflow/dags
-            - ~/airflow/requirements.txt:/requirements.txt
-            - /data:/data
-        environment:
-            - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-        ports:
-            - "8793:8793"
+            - ./dags:/usr/local/airflow/dags
+            - ./requirements.txt:/requirements.txt
+            - ./data:/data
         command: worker
