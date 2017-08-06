@@ -16,7 +16,7 @@ TRY_LOOP="10"
 : ${POSTGRES_USER:="airflow"}
 
 
-echo "Setting up core fernet key..."
+echo ">>> Setting up core fernet key..."
 if [ -z "$AIRFLOW__CORE__FERNET_KEY" ]; then
     if ! [ -e /instance/fernet.key ]; then
         >&2 echo "Unsecured installation, exit."
@@ -29,7 +29,7 @@ else
     echo "Use fernet key from env."
 fi
 
-echo "Setting up webserver secret key..."
+echo ">>> Setting up webserver secret key..."
 if [ -z "$AIRFLOW__WEBSERVER__SECRET_KEY" ]; then
     if ! [ -e /instance/fernet.key ]; then
         >&2 echo "Unsecured installation, exit."
@@ -53,9 +53,7 @@ if [ -e "/requirements.txt" ]; then
     pip install --user -r /requirements.txt
 fi
 
-
-echo "Wait for PostgreSQL ready"
-echo "-------------------------"
+# Wait for postgres server ready
 if [ "$1" = "webserver" ] || [ "$1" = "worker" ] || [ "$1" = "scheduler" ] ; then
   i=0
   while ! nc -z $POSTGRES_HOST $POSTGRES_PORT >/dev/null 2>&1 < /dev/null; do
@@ -71,8 +69,7 @@ if [ "$1" = "webserver" ] || [ "$1" = "worker" ] || [ "$1" = "scheduler" ] ; the
   done
 fi
 
-echo "Wait for Redis ready"
-echo "-------------------------"
+# Wait for redis server ready
 if [ "$1" = "webserver" ] || [ "$1" = "worker" ] || [ "$1" = "scheduler" ] || [ "$1" = "flower" ] ; then
     j=0
     while ! nc -z $REDIS_HOST $REDIS_PORT >/dev/null 2>&1 < /dev/null; do
@@ -90,19 +87,15 @@ echo "==========================="
 echo "Start program              "
 echo "==========================="
 if [ "$1" = "webserver" ]; then
-    echo "Initialize database"
-    echo "-------------------------"
+    echo ">>> Initialize database"
     airflow initdb
 
-    echo "Configure metadata"
-    echo "-------------------------"
+    echo ">>> Configure metadata"
     python /init_meta_db.py --admin /instance/admin_user.json --connections /instance/connections.json --variables /instance/variables.json
 
-    echo "Run webserver"
-    echo "-------------------------"
+    echo ">>> Run webserver"
     exec airflow webserver
 else
-    echo "Run $1"
-    echo "-------------------------"
+    echo ">>> Run $1"
     exec airflow "$@"
 fi
