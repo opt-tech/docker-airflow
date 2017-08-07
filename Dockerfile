@@ -37,7 +37,7 @@ RUN pip install Cython pytz pyOpenSSL ndg-httpsclient pyasn1 flask_bcrypt
 #RUN pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,gcp_api]==$AIRFLOW_VERSION
 RUN pip install "git+https://github.com/apache/incubator-airflow.git@${AIRFLOW_VERSION}#egg=apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,gcp_api]"
 RUN pip install celery[redis]
-
+RUN pip install google-cloud-bigquery
 
 # Airflow tools for bash commands
 RUN apt-get install -y --no-install-recommends rsync openssh-client sshpass
