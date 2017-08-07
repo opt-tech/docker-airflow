@@ -9,7 +9,7 @@ services:
             - ./instance/postgres.env
 
     webserver:
-        image: gghez/docker-airflow
+        image: opt/docker-airflow:1.8.2rc2-1
         restart: always
         depends_on:
             - postgres
@@ -19,6 +19,7 @@ services:
             - ./instance/postgres.env
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./requirements.txt:/requirements.txt
             - ./instance:/instance
         ports:
@@ -26,7 +27,7 @@ services:
         command: webserver
 
     scheduler:
-        image: gghez/docker-airflow
+        image: opt/docker-airflow:1.8.2rc2-1
         restart: always
         depends_on:
             - webserver
@@ -35,11 +36,12 @@ services:
             - ./instance/postgres.env
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./requirements.txt:/requirements.txt
         command: scheduler
 
     worker:
-        image: gghez/docker-airflow
+        image: opt/docker-airflow:1.8.2rc2-1
         restart: always
         depends_on:
             - scheduler
@@ -48,6 +50,7 @@ services:
             - ./instance/postgres.env
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./requirements.txt:/requirements.txt
             - ./data:/data
         command: worker

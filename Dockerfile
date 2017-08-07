@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
 
 # Airflow
-ARG AIRFLOW_VERSION=1.8.2rc1
+ARG AIRFLOW_VERSION=1.8.2rc2
 ARG AIRFLOW_HOME=/usr/local/airflow
 
 # Define en_US.
@@ -33,8 +33,10 @@ RUN update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 RUN useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
 
 RUN pip install Cython pytz pyOpenSSL ndg-httpsclient pyasn1 flask_bcrypt
-RUN pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc]==$AIRFLOW_VERSION
+#RUN pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc]==$AIRFLOW_VERSION
+RUN pip install "git+https://github.com/apache/incubator-airflow.git@${AIRFLOW_VERSION}#egg=apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,gcp_api]"
 RUN pip install celery[redis]
+RUN pip install google-cloud-bigquery
 
 # Remove airflow example files
 RUN rm -fr /usr/local/lib/python3.5/site-packages/airflow/example_dags/

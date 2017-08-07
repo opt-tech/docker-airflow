@@ -6,10 +6,10 @@ machine:
 
 dependencies:
   override:
-    - docker build -t gghez/docker-airflow .
+    - docker build -t opt/docker-airflow .
 
 test:
   pre:
     - sleep 5
   override:
-    - docker run gghez/docker-airflow version |grep '1.8.2rc1'
+    - docker run opt/docker-airflow version |grep '1.8.2rc2'
