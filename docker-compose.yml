@@ -15,9 +15,11 @@ services:
         environment:
             - LOAD_EX=n
             - EXECUTOR=Local
+            - GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/SpinAppTest-b4f4c9d41a6d-airflow.json
         volumes:
             - ./dags:/usr/local/airflow/dags
             - ./plugins:/usr/local/airflow/plugins
+            - ~/Documents/Archive/SpinAppTest-b4f4c9d41a6d-airflow.json:/usr/local/airflow/SpinAppTest-b4f4c9d41a6d-airflow.json
         ports:
             - "8080:8080"
         command: webserver
