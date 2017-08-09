@@ -9,7 +9,7 @@ services:
             - ./instance/postgres.env
 
     webserver:
-        image: opt/docker-airflow:1.8.2rc2-1
+        image: opt/docker-airflow:1.8.2rc1
         restart: always
         depends_on:
             - postgres
@@ -28,7 +28,7 @@ services:
         command: webserver
 
     scheduler:
-        image: opt/docker-airflow:1.8.2rc2-1
+        image: opt/docker-airflow:1.8.2rc1
         restart: always
         depends_on:
             - webserver
@@ -44,7 +44,7 @@ services:
         command: scheduler
 
     worker:
-        image: opt/docker-airflow:1.8.2rc2-1
+        image: opt/docker-airflow:1.8.2rc1
         restart: always
         depends_on:
             - scheduler
