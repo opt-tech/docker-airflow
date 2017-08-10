@@ -51,6 +51,7 @@ def update_connections(connections):
                 existing.login = conn.get('login')
                 existing.password = conn.get('password')
                 existing.schema = conn.get('schema')
+                existing.extra = conn.get('extra')
                 session.merge(existing)
                 print('\tUPDATED: connection %s' % conn_id)
             else:
