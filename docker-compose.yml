@@ -9,7 +9,7 @@ services:
             - ./instance/postgres.env
 
     webserver:
-        image: opt/docker-airflow:1.8.2rc1
+        image: opt/docker-airflow:1.8.2
         restart: always
         depends_on:
             - postgres
