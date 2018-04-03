@@ -17,7 +17,7 @@ This repository contains **Dockerfile** of [apache-airflow](https://github.com/a
 
 ## Installation
 
-Pull the image from the Docker repository.
+Pull the image from the Docker repository
 
         docker pull puckel/docker-airflow
 
