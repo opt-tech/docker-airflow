@@ -33,6 +33,7 @@ RUN locale-gen
 RUN update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 RUN useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
 
+RUN pip install --upgrade setuptools
 RUN pip install Cython pytz pyOpenSSL ndg-httpsclient pyasn1 flask_bcrypt
 #RUN pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,gcp_api]==$AIRFLOW_VERSION
 RUN pip install "git+https://github.com/apache/incubator-airflow.git@${AIRFLOW_VERSION}#egg=apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,gcp_api]"
